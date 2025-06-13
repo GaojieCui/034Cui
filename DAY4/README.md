@@ -1,61 +1,85 @@
-每个图像样本对应一行文本标签，格式如下：
+## 📦 Requirements
 
+Install dependencies using pip:
+
+```bash
+pip install torch torchvision einops tensorboard
+✅ Optional: To enable GPU acceleration, ensure PyTorch is installed with CUDA support.
+
+📊 Dataset Format
+Each line in train.txt or val.txt should follow this format:
+
+python-repl
 复制
 编辑
-img001.jpg 0
-img002.jpg 1
-img003.jpg 2
-图像文件应放在指定文件夹中，路径在 .txt 文件中只需写文件名。
+image1.jpg 0
+image2.jpg 1
+...
+Images should be placed in the corresponding folder (Images/train or Images/val).
 
-🚀 训练方式
-运行以下命令启动训练：
+The label should be an integer starting from 0.
+
+🚀 How to Train
+Run the script:
 
 bash
 复制
 编辑
 python vit_train.py
-默认参数：
+Default Parameters
+Input image shape: (3, 1, 256) → flattened to (3, 256)
 
-输入图像大小：(3, 1, 256)，在训练中压缩为 (3, 256)
+Patch size: 16
 
-Patch Size: 16
+Embedding dimension: 1024
 
-Hidden Dim: 1024
+Transformer depth: 6
 
-Transformer Depth: 6
+Heads: 8
 
-Head 数量: 8
+MLP hidden dim: 2048
 
-训练轮次: 10
+Batch size: 64
 
-Batch Size: 64
+Epochs: 10
 
 Optimizer: Adam
 
-Learning Rate: 1e-4
+Learning rate: 1e-4
 
-训练结束后模型将保存在 model_save/ 目录中。
+The trained model will be saved to the model_save/ directory after each epoch.
 
-📈 可视化日志（TensorBoard）
-训练中日志会写入 logs_vit_rewrite/ 目录，可使用 TensorBoard 查看：
+📈 TensorBoard Logging
+To monitor training and evaluation metrics:
 
 bash
 复制
 编辑
 tensorboard --logdir=logs_vit_rewrite
-在浏览器中打开 http://localhost:6006 查看训练 loss 和 accuracy 曲线。
+Then open http://localhost:6006 in your browser.
 
-🧠 模型结构概览
-基于原始 Vision Transformer（ViT）结构
+🧠 Model Overview
+This is a 1D-sequence version of the Vision Transformer (ViT)
 
-支持任意一维序列图像（本例中为压缩图像通道为 1）
+Converts each image into a sequence of flattened patches
 
-分类层采用 cls_token + Transformer + MLP Head
+Applies standard Transformer layers with multi-head self-attention
 
-📌 注意事项
-图像 resize 到 (1, 256) 后会被展平为一维向量序列输入 ViT
+Uses a classification token (cls_token) to summarize features
 
-需确保 train.txt 和 val.txt 标签与图像路径匹配
+⚠️ Notes
+Ensure that all image paths listed in train.txt and val.txt exist and are valid.
 
-支持自动检测分类数（最大标签值 + 1）
+Number of classes is automatically inferred from dataset labels.
 
+The training assumes normalized RGB images and resizes them to (1, 256).
+
+📜 License
+This project is licensed for educational and research purposes only. Feel free to modify or extend it for non-commercial uses.
+
+❤️ Acknowledgments
+ViT: An Image is Worth 16x16 Words (Dosovitskiy et al., 2020)
+
+PyTorch
+
+einops
